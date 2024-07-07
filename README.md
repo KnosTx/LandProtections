@@ -1,4 +1,4 @@
-# LandProtections Plugin
+# LandProtections
 
 LandProtections is a plugin designed to protect land ownership on PocketMine-MP servers.
 
