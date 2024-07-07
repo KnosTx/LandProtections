@@ -1,0 +1,42 @@
+name: Code Style Check
+
+on:
+  push:
+    branches:
+      - stable  # Ganti dengan nama branch utama Anda
+  pull_request:
+    branches:
+      - stable  # Ganti dengan nama branch utama Anda
+
+jobs:
+  style_check:
+    name: Check Code Style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'  # Ganti sesuai versi PHP yang digunakan
+
+      - name: Install Composer Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run PHP CodeSniffer
+        run: vendor/bin/phpcs --standard=PSR12 src/ tests/  # Sesuaikan dengan path kode Anda
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyze --level=5 src/  # Sesuaikan dengan path kode Anda
+
+      - name: Run Psalm
+        run: vendor/bin/psalm --show-info=false --no-cache --threads=4 --diff --shepherd
+
+      - name: Run PHP Unit Tests
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+
+      - name: Upload Coverage Report
+        uses: codecov/codecov-action@v2
+        with:
+          file: ./coverage.xml
