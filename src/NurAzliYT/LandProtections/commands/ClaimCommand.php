@@ -4,22 +4,20 @@ namespace NurAzliYT\LandProtections\commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\player\Player;
-use pocketmine\plugin\PluginOwned;
+use pocketmine\plugin\Plugin;
+use pocketmine\plugin\PluginIdentifiableCommand;
 use pocketmine\plugin\PluginOwnedTrait;
 use NurAzliYT\LandProtections\Main;
 
-class ClaimCommand extends Command implements PluginIdentifiableCommand, PluginOwned {
+class ClaimCommand extends Command implements PluginIdentifiableCommand {
     use PluginOwnedTrait;
 
-    private $plugin;
+    private Main $plugin;
 
     public function __construct(Main $plugin) {
-        parent::__construct("claim", "Claim a chunk of land", "/claim");
-        $this->setPermission("landprotections.claim");
+        parent::__construct("claim", "Claim a chunk of land");
         $this->plugin = $plugin;
-        $this->owningPlugin = $plugin;
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
@@ -28,23 +26,18 @@ class ClaimCommand extends Command implements PluginIdentifiableCommand, PluginO
             return false;
         }
 
-        if (!$sender->hasPermission("landprotections.claim")) {
-            $sender->sendMessage("You do not have permission to use this command.");
-            return false;
-        }
-
         $position = $sender->getPosition();
         if ($this->plugin->isChunkClaimed($position)) {
             $sender->sendMessage("This chunk is already claimed.");
-            return false;
+        } else {
+            $this->plugin->claimChunk($position, $sender->getName());
+            $sender->sendMessage("Chunk claimed successfully!");
         }
 
-        $this->plugin->claimChunk($position, $sender->getName());
-        $sender->sendMessage("Chunk successfully claimed!");
         return true;
     }
 
-    public function getOwningPlugin(): \pocketmine\plugin\Plugin {
+    public function getPlugin(): Plugin {
         return $this->plugin;
     }
 }
