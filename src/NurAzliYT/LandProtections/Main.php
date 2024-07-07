@@ -3,18 +3,15 @@
 namespace NurAzliYT\LandProtections;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\block\Block;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\command\Command;
-use pocketmine\command\CommandSender;
-use pocketmine\world\Position;
 use pocketmine\utils\Config;
-use NurAzliYT\LandProtections\commands\ClaimCommand;
-use pocketmine\world\World;
 use pocketmine\player\Player;
+use pocketmine\world\Position;
+use pocketmine\world\World;
+use NurAzliYT\LandProtections\commands\ClaimCommand;
 
 class Main extends PluginBase implements Listener {
 
