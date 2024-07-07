@@ -13,10 +13,9 @@ use pocketmine\command\CommandSender;
 use pocketmine\world\Position;
 use pocketmine\utils\Config;
 use pocketmine\event\Cancellable;
-use pocketmine\plugin\Plugin;
+use NurAzliYT\LandProtections\commands\ClaimCommand;
 use pocketmine\world\World;
 use pocketmine\player\Player;
-use NurAzliYT\LandProtections\commands\ClaimCommand;
 
 class Main extends PluginBase implements Listener {
 
@@ -44,9 +43,7 @@ class Main extends PluginBase implements Listener {
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName())) {
-                if ($event->isCancelled()) {
-                    $event->cancel();
-                }
+                $event->cancel();
                 $player->sendMessage("This chunk is claimed by someone else.");
             }
         }
@@ -59,9 +56,7 @@ class Main extends PluginBase implements Listener {
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName())) {
-                if ($event->isCancelled()) {
-                    $event->cancel();
-                }
+                $event->cancel();
                 $player->sendMessage("This chunk is claimed by someone else.");
             }
         }
@@ -74,9 +69,7 @@ class Main extends PluginBase implements Listener {
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName())) {
-                if ($event->isCancelled()) {
-                    $event->cancel();
-                }
+                $event->cancel();
                 $player->sendMessage("This chunk is claimed by someone else.");
             }
         }
