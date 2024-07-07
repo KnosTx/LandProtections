@@ -23,8 +23,9 @@ To start protecting an area, use the following command in-game:
 ## Permission
 | Command          | Permission                         |
 | ---------------- | ---------------------------------- |
-| \`claim\`        | \`landprotections.command.claim\` |
-| \`invite\` (coming soon) | \`landprotections.command.invite\` |
+| ```claim```        | ```landprotections.command.claim``` |
+| ```invite``` (coming soon) | \
+```landprotections.command.invite``` |
 
 ## Contributing
 
