@@ -10,6 +10,7 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\utils\Config;
 use pocketmine\player\Player;
 use pocketmine\level\Position;
+use NurAzliYT\LandProtections\commands\ClaimCommand;
 
 class Main extends PluginBase implements Listener {
 
