@@ -8,6 +8,7 @@ use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
+use NurAzliYT\LandProtections\Main;
 
 class ClaimCommand extends Command implements PluginIdentifiableCommand, PluginOwned {
     use PluginOwnedTrait;
