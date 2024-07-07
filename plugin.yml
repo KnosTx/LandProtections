@@ -6,8 +6,8 @@ author: NurAzliYT
 commands:
   claim:
     description: Claim a chunk of land
-    usage: /claim
+    permission: landprotections.command.claim
 permissions:
-  landprotections.claim:
+  landprotections.command.claim:
     description: Allows the player to claim a chunk
     default: true
