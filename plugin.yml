@@ -1,0 +1,13 @@
+name: LandProtections
+main: NurAzliYT\LandProtections\Main
+version: 1.0.0
+api: 5.0.0
+author: NurAzliYT
+commands:
+  claim:
+    description: Claim a chunk of land
+    usage: /claim
+permissions:
+  landprotections.claim:
+    description: Allows the player to claim a chunk
+    default: true
