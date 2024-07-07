@@ -6,12 +6,9 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
-use pocketmine\plugin\PluginIdentifiableCommand;
-use pocketmine\plugin\PluginOwnedTrait;
 use NurAzliYT\LandProtections\Main;
 
 class ClaimCommand extends Command implements PluginIdentifiableCommand {
-    use PluginOwnedTrait;
 
     private Main $plugin;
 
