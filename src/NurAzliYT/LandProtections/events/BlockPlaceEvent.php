@@ -12,6 +12,7 @@ class BlockPlaceEvent extends Event implements Cancellable {
     private Player $player;
     private Block $block;
     private Position $position;
+    private bool $isCancelled = false;
 
     public function __construct(Player $player, Block $block, Position $position) {
         $this->player = $player;
@@ -33,5 +34,13 @@ class BlockPlaceEvent extends Event implements Cancellable {
 
     public function cancel(): void {
         $this->setCancelled();
+    }
+
+    public function isCancelled(): bool {
+        return $this->isCancelled;
+    }
+
+    public function setCancelled(bool $isCancelled = true): void {
+        $this->isCancelled = $isCancelled;
     }
 }
