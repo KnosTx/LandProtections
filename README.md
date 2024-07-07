@@ -20,6 +20,12 @@ To start protecting an area, use the following command in-game:
 /claim <area_name>
 ```
 
+## Permission
+| Command          | Permission                         |
+| ---------------- | ---------------------------------- |
+| \`claim\`        | \`landprotections.command.claim\` |
+| \`invite\` (coming soon) | \`landprotections.command.invite\` |
+
 ## Contributing
 
 If you'd like to contribute to the development of this plugin, please follow these steps:
