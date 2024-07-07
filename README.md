@@ -32,7 +32,7 @@ If you'd like to contribute to the development of this plugin, please follow the
 
 ## License
 
-This plugin is licensed under the MIT License. See the `LICENSE` file for more information.
+This plugin is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
 ## Contact
 
