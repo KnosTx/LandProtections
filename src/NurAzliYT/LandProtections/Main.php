@@ -10,7 +10,7 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\utils\Config;
 use pocketmine\player\Player;
 use pocketmine\world\Position;
-use pocketmine\world\World;
+use pocketmine\block\Block;
 use NurAzliYT\LandProtections\commands\ClaimCommand;
 
 class Main extends PluginBase implements Listener {
@@ -34,8 +34,7 @@ class Main extends PluginBase implements Listener {
 
     public function onPlayerInteract(PlayerInteractEvent $event): void {
         $player = $event->getPlayer();
-        $block = $event->getBlock();
-        $position = $block->getPosition();
+        $position = $event->getBlock()->getPosition();
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName())) {
@@ -47,8 +46,7 @@ class Main extends PluginBase implements Listener {
 
     public function onBlockPlace(BlockPlaceEvent $event): void {
         $player = $event->getPlayer();
-        $block = $event->getBlock();
-        $position = $block->getPosition();
+        $position = $event->getBlock()->getPosition();
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName())) {
@@ -60,8 +58,7 @@ class Main extends PluginBase implements Listener {
 
     public function onBlockBreak(BlockBreakEvent $event): void {
         $player = $event->getPlayer();
-        $block = $event->getBlock();
-        $position = $block->getPosition();
+        $position = $event->getBlock()->getPosition();
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName())) {
@@ -88,5 +85,9 @@ class Main extends PluginBase implements Listener {
 
     public function getChunkHash(Position $position): string {
         return ($position->getFloorX() >> 4) . ":" . ($position->getFloorZ() >> 4);
+    }
+
+    public function getBlock(Position $position): Block {
+        return $position->getWorld()->getBlock($position);
     }
 }
