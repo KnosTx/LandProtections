@@ -1,6 +1,6 @@
 <?php
 
-namespace NurAzliYT\LandProtections;
+namespace NurAzliYT\LandProtections\commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
