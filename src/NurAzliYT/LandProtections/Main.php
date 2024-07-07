@@ -12,7 +12,6 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\world\Position;
 use pocketmine\utils\Config;
-use pocketmine\event\Cancellable;
 use NurAzliYT\LandProtections\commands\ClaimCommand;
 use pocketmine\world\World;
 use pocketmine\player\Player;
