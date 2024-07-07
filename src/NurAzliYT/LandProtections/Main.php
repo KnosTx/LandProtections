@@ -3,19 +3,22 @@
 namespace NurAzliYT\LandProtections;
 
 use pocketmine\plugin\PluginBase;
+use pocketmine\block\Block;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+use pocketmine\world\Position;
 use pocketmine\utils\Config;
-use pocketmine\player\Player;
-use pocketmine\level\Position;
+use pocketmine\event\Cancellable;
 use NurAzliYT\LandProtections\commands\ClaimCommand;
 
 class Main extends PluginBase implements Listener {
 
-    private $claimedChunks = [];
-    private $config;
+    private Config $config;
+    private array $claimedChunks = [];
 
     public function onEnable(): void {
         $this->saveDefaultConfig();
@@ -34,54 +37,64 @@ class Main extends PluginBase implements Listener {
     public function onPlayerInteract(PlayerInteractEvent $event): void {
         $player = $event->getPlayer();
         $block = $event->getBlock();
-        $position = $block->asPosition();
+        $position = $block->getPosition();
 
-        if ($this->isChunkClaimed($position) && !$this->isChunkOwner($position, $player->getName())) {
-            $player->sendMessage("This chunk is already claimed by another player.");
-            $event->setCancelled();
+        if ($this->isChunkClaimed($position)) {
+            if (!$this->isChunkOwner($position, $player->getName())) {
+                if ($event instanceof Cancellable) {
+                    $event->setCancelled();
+                }
+                $player->sendMessage("This chunk is claimed by someone else.");
+            }
         }
     }
 
     public function onBlockPlace(BlockPlaceEvent $event): void {
         $player = $event->getPlayer();
         $block = $event->getBlock();
-        $position = $block->asPosition();
+        $position = $block->getPosition();
 
-        if ($this->isChunkClaimed($position) && !$this->isChunkOwner($position, $player->getName())) {
-            $player->sendMessage("You cannot place blocks in a chunk that you do not own.");
-            $event->setCancelled();
+        if ($this->isChunkClaimed($position)) {
+            if (!$this->isChunkOwner($position, $player->getName())) {
+                if ($event instanceof Cancellable) {
+                    $event->setCancelled();
+                }
+                $player->sendMessage("This chunk is claimed by someone else.");
+            }
         }
     }
 
     public function onBlockBreak(BlockBreakEvent $event): void {
         $player = $event->getPlayer();
         $block = $event->getBlock();
-        $position = $block->asPosition();
+        $position = $block->getPosition();
 
-        if ($this->isChunkClaimed($position) && !$this->isChunkOwner($position, $player->getName())) {
-            $player->sendMessage("You cannot break blocks in a chunk that you do not own.");
-            $event->setCancelled();
+        if ($this->isChunkClaimed($position)) {
+            if (!$this->isChunkOwner($position, $player->getName())) {
+                if ($event instanceof Cancellable) {
+                    $event->setCancelled();
+                }
+                $player->sendMessage("This chunk is claimed by someone else.");
+            }
         }
     }
 
-    public function claimChunk(Position $position, string $playerName): void {
+    public function claimChunk(Position $position, string $owner): void {
         $chunkHash = $this->getChunkHash($position);
-        $this->claimedChunks[$chunkHash] = $playerName;
+        $this->claimedChunks[$chunkHash] = $owner;
     }
 
-    private function isChunkClaimed(Position $position): bool {
+    public function isChunkClaimed(Position $position): bool {
         $chunkHash = $this->getChunkHash($position);
         return isset($this->claimedChunks[$chunkHash]);
     }
 
-    private function isChunkOwner(Position $position, string $playerName): bool {
+    public function isChunkOwner(Position $position, string $owner): bool {
         $chunkHash = $this->getChunkHash($position);
-        return $this->claimedChunks[$chunkHash] === $playerName;
+        return isset($this->claimedChunks[$chunkHash]) && $this->claimedChunks[$chunkHash] === $owner;
     }
 
-    private function getChunkHash(Position $position): string {
-        $chunkX = $position->getFloorX() >> 4;
-        $chunkZ = $position->getFloorZ() >> 4;
-        return $chunkX . ":" . $chunkZ;
+    public function getChunkHash(Position $position): string {
+        return $position->getFloorX() >> 4 . ":" . $position->getFloorZ() >> 4;
     }
 }
