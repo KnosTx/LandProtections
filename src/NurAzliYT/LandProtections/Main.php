@@ -5,7 +5,7 @@ namespace NurAzliYT\LandProtections;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\block\BlockPlaceEvent;
+use NurAzliYT\LandProtections\events\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\utils\Config;
 use pocketmine\player\Player;
