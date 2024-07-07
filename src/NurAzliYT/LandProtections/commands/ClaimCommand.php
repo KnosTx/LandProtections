@@ -17,10 +17,15 @@ class ClaimCommand extends Command implements PluginIdentifiableCommand {
 
     public function __construct(Main $plugin) {
         parent::__construct("claim", "Claim a chunk of land");
+        $this->setPermission("landprotections.command.claim"); // Add a permission node if needed
         $this->plugin = $plugin;
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
+        if (!$this->testPermission($sender)) {
+            return false;
+        }
+
         if (!$sender instanceof Player) {
             $sender->sendMessage("This command can only be used in-game.");
             return false;
