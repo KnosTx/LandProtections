@@ -1,13 +1,22 @@
 name: LandProtections
 main: NurAzliYT\LandProtections\Main
-version: 1.0.0
+version: 1.0.1
 api: 5.0.0
-author: NurAzliYT
+softdepend:
+  - BedrockEconomy
 commands:
   claim:
-    description: Claim a chunk of land
-    permission: landprotections.command.claim
+    description: "Claim a chunk of land"
+    usage: "/claim"
+    permission: "landprotections.claim"
+  accessland:
+    description: "Give access to a chunk of land"
+    usage: "/accessland <player_name>"
+    permission: "landprotections.accessland"
 permissions:
-  landprotections.command.claim:
+  landprotections.accessland:
+    description: "Allows an operator to give access to a chunk of land"
+    default: op
+  landprotections.claim:
     description: Allows the player to claim a chunk
     default: true
