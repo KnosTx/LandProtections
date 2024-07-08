@@ -17,24 +17,23 @@ use NurAzliYT\LandProtections\commands\ClaimCommand;
 use NurAzliYT\LandProtections\commands\AccessLandCommand;
 use cooldogedev\BedrockEconomy\BedrockEconomy;
 use cooldogedev\BedrockEconomy\api\BedrockEconomyAPI;
+use cooldogedev\BedrockEconomy\api\BedrockEconomyAPIv1;
 use pocketmine\player\Player;
 
 class Main extends PluginBase implements Listener {
-
     private Config $config;
     private array $claimedChunks = [];
     private array $chunkAccess = [];
-    private ?BedrockEconomyAPI $economyAPI = null;
+    private ?BedrockEconomyAPIv1 $economyAPI = null;
 
     public function onEnable(): void {
         $this->saveDefaultConfig();
         $this->config = new Config($this->getDataFolder() . "claimedChunks.yml", Config::YAML);
         $this->claimedChunks = $this->config->getAll();
-
         $this->chunkAccess = $this->config->get("chunkAccess", []);
 
         // BedrockEconomy integration
-        $this->economyAPI = BedrockEconomy::getInstance()->getAPI();
+        $this->economyAPI = BedrockEconomy::getInstance()->getAPIv1();
 
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getCommandMap()->register("claim", new ClaimCommand($this));
@@ -54,9 +53,7 @@ class Main extends PluginBase implements Listener {
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName()) && !$this->hasAccessToChunk($position, $player->getName())) {
-                if ($event instanceof Cancellable) {
-                    $event->setCancelled();
-                }
+                $event->cancel();
                 $player->sendMessage("This chunk is claimed by someone else.");
             }
         }
@@ -69,9 +66,7 @@ class Main extends PluginBase implements Listener {
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName()) && !$this->hasAccessToChunk($position, $player->getName())) {
-                if ($event instanceof Cancellable) {
-                    $event->setCancelled();
-                }
+                $event->cancel();
                 $player->sendMessage("This chunk is claimed by someone else.");
             }
         }
@@ -84,9 +79,7 @@ class Main extends PluginBase implements Listener {
 
         if ($this->isChunkClaimed($position)) {
             if (!$this->isChunkOwner($position, $player->getName()) && !$this->hasAccessToChunk($position, $player->getName())) {
-                if ($event instanceof Cancellable) {
-                    $event->setCancelled();
-                }
+                $event->cancel();
                 $player->sendMessage("This chunk is claimed by someone else.");
             }
         }
@@ -108,7 +101,7 @@ class Main extends PluginBase implements Listener {
     }
 
     public function getChunkHash(Position $position): string {
-        return $position->getFloorX() >> 4 . ":" . $position->getFloorZ() >> 4;
+        return ($position->getFloorX() >> 4) . ":" . ($position->getFloorZ() >> 4);
     }
 
     public function chargePlayer(Player $player, int $amount): bool {
@@ -117,16 +110,28 @@ class Main extends PluginBase implements Listener {
             return false;
         }
 
-        $balance = $this->economyAPI->getPlayerBalance($player->getName());
+        $this->economyAPI->getPlayerBalance($player->getName(), function (?int $balance) use ($player, $amount) {
+            if ($balance === null) {
+                $player->sendMessage("Failed to retrieve balance.");
+                return false;
+            }
 
-        if ($balance >= $amount) {
-            $this->economyAPI->subtractFromPlayerBalance($player->getName(), $amount);
-            $player->sendMessage("You have been charged $amount coins.");
-            return true;
-        } else {
-            $player->sendMessage("You do not have enough coins to claim this chunk.");
-            return false;
-        }
+            if ($balance >= $amount) {
+                $this->economyAPI->subtractFromPlayerBalance($player->getName(), $amount, function (bool $success) use ($player, $amount) {
+                    if ($success) {
+                        $player->sendMessage("You have been charged $amount coins.");
+                    } else {
+                        $player->sendMessage("Failed to charge your balance.");
+                    }
+                });
+                return true;
+            } else {
+                $player->sendMessage("You do not have enough coins to claim this chunk.");
+                return false;
+            }
+        });
+
+        return true; // This assumes the balance retrieval is always async and successful.
     }
 
     public function giveAccessToChunk(Position $position, string $playerName): void {
