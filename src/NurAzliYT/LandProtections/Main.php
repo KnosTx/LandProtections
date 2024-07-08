@@ -6,7 +6,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\block\Block;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\block\BlockPlaceEvent;
+use NurAzliYT\events\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
