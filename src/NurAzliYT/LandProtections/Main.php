@@ -12,19 +12,17 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\world\Position;
 use pocketmine\utils\Config;
-use pocketmine\event\Cancellable;
-use NurAzliYT\LandProtections\commands\ClaimCommand;
-use NurAzliYT\LandProtections\commands\AccessLandCommand;
+use pocketmine\player\Player;
 use cooldogedev\BedrockEconomy\BedrockEconomy;
 use cooldogedev\BedrockEconomy\api\BedrockEconomyAPI;
-use cooldogedev\BedrockEconomy\api\BedrockEconomyAPIv1;
-use pocketmine\player\Player;
+use NurAzliYT\LandProtections\commands\ClaimCommand;
+use NurAzliYT\LandProtections\commands\AccessLandCommand;
 
 class Main extends PluginBase implements Listener {
     private Config $config;
     private array $claimedChunks = [];
     private array $chunkAccess = [];
-    private ?BedrockEconomyAPIv1 $economyAPI = null;
+    private ?BedrockEconomyAPI $economyAPI = null;
 
     public function onEnable(): void {
         $this->saveDefaultConfig();
@@ -33,7 +31,7 @@ class Main extends PluginBase implements Listener {
         $this->chunkAccess = $this->config->get("chunkAccess", []);
 
         // BedrockEconomy integration
-        $this->economyAPI = BedrockEconomy::getInstance()->getAPIv1();
+        $this->economyAPI = BedrockEconomy::getInstance()->getAPI();
 
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getCommandMap()->register("claim", new ClaimCommand($this));
